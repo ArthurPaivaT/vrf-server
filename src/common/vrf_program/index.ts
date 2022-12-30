@@ -32,6 +32,8 @@ export async function getCommitInstruction(min: number, max: number) {
     })
     .signers([pda])
     .instruction();
+
+  return instruction;
 }
 
 export async function getRevealInstruction(pda: PublicKey, result: number) {
@@ -42,4 +44,6 @@ export async function getRevealInstruction(pda: PublicKey, result: number) {
       system_program: SystemProgram.programId,
     })
     .instruction();
+
+  return instruction;
 }

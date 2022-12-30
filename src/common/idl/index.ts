@@ -42,8 +42,13 @@ export const idl = {
       accounts: [
         {
           name: "randomValue",
-          isMut: false,
+          isMut: true,
           isSigner: false,
+        },
+        {
+          name: "revealer",
+          isMut: true,
+          isSigner: true,
         },
         {
           name: "systemProgram",
@@ -62,7 +67,12 @@ export const idl = {
   accounts: [
     {
       name: "RandomValue",
-      docs: ["stores info with min/max and after result after being processed"],
+      docs: [
+        "whitelists are used to control what gems can/can't go into the vault",
+        "currently 2 types of vault lists are supported: by mint and by creator",
+        "if the whitelist PDA exists, then the mint/creator is considered accepted",
+        "if at least 1 whitelist PDA exists total, then all deposit attempts will start getting checked",
+      ],
       type: {
         kind: "struct",
         fields: [
@@ -93,4 +103,7 @@ export const idl = {
       msg: "User doesn't have tickets",
     },
   ],
+  metadata: {
+    address: "8xZUNqKPrgs6sQ3YE1dvT5rcmUvBWkGFyCB6UaJinBeG",
+  },
 };
