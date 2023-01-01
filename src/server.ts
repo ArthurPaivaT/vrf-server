@@ -2,12 +2,15 @@ import "./env";
 import express from "express";
 import cors from "cors";
 import routes from "./routes";
+import { fetchNotRevealed } from "revealer";
 
 const port = process.env.PORT || 3333;
 
 (async () => {
   try {
     const server = express();
+
+    fetchNotRevealed();
 
     server.use(cors());
     server.use(express.json());

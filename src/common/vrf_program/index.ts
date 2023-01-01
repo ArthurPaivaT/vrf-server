@@ -5,13 +5,12 @@ import { AnchorProvider, BN, Idl, Program } from "@project-serum/anchor";
 import { NodeWallet } from "@metaplex/js";
 
 import { idl } from "../idl/index";
+import { keypair, programId } from "config";
 
 const connection = new Connection(
   process.env.RPC_URL || "https://api.devnet.solana.com",
   "confirmed"
 );
-
-const programId = new PublicKey("D6PrgNa8BAfgZdRMKVDUmYB7EJUGwcckQ4yYyEun21WJ");
 
 const program = new Program(
   idl as Idl,
@@ -36,12 +35,13 @@ export async function getCommitInstruction(min: number, max: number) {
   return instruction;
 }
 
-export async function getRevealInstruction(pda: PublicKey, result: number) {
+export async function getRevealInstruction(pda: PublicKey, result: BigInt) {
   const instruction = await program.methods
-    .reveal(new BN(result))
+    .reveal(new BN(result.toString()))
     .accounts({
-      random_value: pda,
-      system_program: SystemProgram.programId,
+      randomValue: pda,
+      revealer: keypair.publicKey,
+      systemProgram: SystemProgram.programId,
     })
     .instruction();
 

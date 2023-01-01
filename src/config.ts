@@ -6,9 +6,9 @@ const connection = new Connection(
   "confirmed"
 );
 
-const program = new PublicKey(process.env.PROGRAM as string);
+const programId = new PublicKey(process.env.PROGRAM as string);
 const keypair = Keypair.fromSecretKey(
   new Uint8Array(bs58.decode(process.env.PK as string))
 );
 
-export { connection, program, keypair };
+export { connection, programId, keypair };
