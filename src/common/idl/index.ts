@@ -29,11 +29,11 @@ export const idl = {
       args: [
         {
           name: "min",
-          type: "u64",
+          type: "u32",
         },
         {
           name: "max",
-          type: "u64",
+          type: "u32",
         },
       ],
     },
@@ -59,7 +59,7 @@ export const idl = {
       args: [
         {
           name: "result",
-          type: "u64",
+          type: "u32",
         },
       ],
     },
@@ -78,15 +78,15 @@ export const idl = {
         fields: [
           {
             name: "min",
-            type: "u64",
+            type: "u32",
           },
           {
             name: "max",
-            type: "u64",
+            type: "u32",
           },
           {
             name: "result",
-            type: "u64",
+            type: "u32",
           },
           {
             name: "processed",

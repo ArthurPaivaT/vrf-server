@@ -6,6 +6,7 @@ import { NodeWallet } from "@metaplex/js";
 
 import { idl } from "../idl/index";
 import { keypair, programId } from "config";
+import { stringifyPKsAndBNs } from "utils";
 
 const connection = new Connection(
   process.env.RPC_URL || "https://api.devnet.solana.com",
@@ -19,6 +20,12 @@ const program = new Program(
     commitment: "confirmed",
   })
 );
+
+export async function getPDAInfo(pda: PublicKey) {
+  let state = await program.account.randomValue.fetch(pda);
+  state = stringifyPKsAndBNs(state);
+  return state;
+}
 
 export async function getCommitInstruction(min: number, max: number) {
   const pda = Keypair.generate();
