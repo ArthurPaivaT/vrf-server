@@ -6,10 +6,12 @@ import MT19937 from "mersenne-twister";
 
 import crypto from "crypto";
 
+//TODO create pool with PDAs being processed
+
 async function fetchNotRevealed() {
   while (1) {
     await new Promise((r) => setTimeout(r, 5000)); //Routine every 5 seconds
-    console.log("\nRefetching");
+    console.log("\nBuscando");
 
     let filter = {
       memcmp: {
@@ -29,7 +31,11 @@ async function fetchNotRevealed() {
         let state = (await getPDAInfo(pda.pubkey)) as any;
         console.log(state);
 
-        const result = generate(keypair.secretKey, pda.pubkey.toBytes());
+        const result = generate(
+          keypair.secretKey,
+          pda.pubkey.toBytes(),
+          state.commits
+        );
         const signature = await reveal(
           pda.pubkey,
           BigInt(Math.floor(result * (state.max + 1 - state.min) + state.min))
@@ -65,8 +71,10 @@ async function reveal(pda: PublicKey, result: BigInt) {
   return signature;
 }
 
-function generate(data1: Uint8Array, data2: Uint8Array) {
-  const seeds = new Uint8Array([...data1, ...data2]);
+function generate(data1: Uint8Array, data2: Uint8Array, commits: number) {
+  const commitsAsArray = new Uint8Array([commits]);
+
+  const seeds = new Uint8Array([...commitsAsArray, ...data1, ...data2]);
 
   let randomFloat = crypto
     .createHash("sha256")

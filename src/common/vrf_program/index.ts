@@ -8,10 +8,7 @@ import { idl } from "../idl/index";
 import { keypair, programId } from "config";
 import { stringifyPKsAndBNs } from "utils";
 
-const connection = new Connection(
-  process.env.RPC_URL || "https://api.devnet.solana.com",
-  "confirmed"
-);
+const connection = new Connection("https://api.devnet.solana.com", "confirmed");
 
 const program = new Program(
   idl as Idl,
