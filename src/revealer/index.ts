@@ -8,6 +8,8 @@ import crypto from "crypto";
 
 //TODO create pool with PDAs being processed
 
+const processing = new Map();
+
 async function fetchNotRevealed() {
   while (1) {
     await new Promise((r) => setTimeout(r, 5000)); //Routine every 5 seconds
@@ -28,6 +30,8 @@ async function fetchNotRevealed() {
       for (const pda of unprocessedPDAs) {
         await new Promise((r) => setTimeout(r, 1000)); // Wait 1 second between each PDA to be updated
 
+        if (processing.has(pda)) continue;
+
         let state = (await getPDAInfo(pda.pubkey)) as any;
         console.log(state);
 
@@ -41,6 +45,8 @@ async function fetchNotRevealed() {
           BigInt(Math.floor(result * (state.max + 1 - state.min) + state.min))
         );
         console.log("signature", signature);
+
+        processing.set(pda, new Date().getTime());
       }
     } catch (error) {
       console.log("Error Fetching not revealed accounts", error);
@@ -88,4 +94,18 @@ function generate(data1: Uint8Array, data2: Uint8Array, commits: number) {
   return rng.random();
 }
 
-export { fetchNotRevealed };
+function cleanupExpiredAddresses() {
+  const currentTime = new Date().getTime();
+
+  for (const [address, lastSentTime] of processing.entries()) {
+    const timeDifference = currentTime - lastSentTime;
+
+    if (timeDifference >= 120000) {
+      // 2 minutes after the transaction is sent
+      processing.delete(address);
+      console.log("Cleaned", address, "from cache");
+    }
+  }
+}
+
+export { fetchNotRevealed, cleanupExpiredAddresses };

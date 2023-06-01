@@ -63,16 +63,31 @@ export const idl = {
         },
       ],
     },
+    {
+      name: "recommit",
+      accounts: [
+        {
+          name: "randomValue",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "user",
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [],
+    },
   ],
   accounts: [
     {
       name: "RandomValue",
-      docs: [
-        "whitelists are used to control what gems can/can't go into the vault",
-        "currently 2 types of vault lists are supported: by mint and by creator",
-        "if the whitelist PDA exists, then the mint/creator is considered accepted",
-        "if at least 1 whitelist PDA exists total, then all deposit attempts will start getting checked",
-      ],
       type: {
         kind: "struct",
         fields: [
@@ -92,6 +107,10 @@ export const idl = {
             name: "processed",
             type: "bool",
           },
+          {
+            name: "commits",
+            type: "u32",
+          },
         ],
       },
     },
@@ -99,8 +118,8 @@ export const idl = {
   errors: [
     {
       code: 6000,
-      name: "WinnerNotValid",
-      msg: "User doesn't have tickets",
+      name: "NotRevealedYet",
+      msg: "Random Value not revealed yet",
     },
   ],
   metadata: {

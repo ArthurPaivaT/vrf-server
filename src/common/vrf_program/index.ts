@@ -8,7 +8,8 @@ import { idl } from "../idl/index";
 import { keypair, programId } from "config";
 import { stringifyPKsAndBNs } from "utils";
 
-const connection = new Connection("https://api.devnet.solana.com", "confirmed");
+// const connection = new Connection("https://api.devnet.solana.com", "confirmed");
+const connection = new Connection("http://127.0.0.1:8899", "confirmed");
 
 const program = new Program(
   idl as Idl,
