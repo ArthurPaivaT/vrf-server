@@ -6,9 +6,7 @@ import MT19937 from "mersenne-twister";
 
 import crypto from "crypto";
 
-//TODO create pool with PDAs being processed
-
-const processing = new Map();
+const pendingReveals = new Map();
 
 async function fetchNotRevealed() {
   while (1) {
@@ -22,18 +20,35 @@ async function fetchNotRevealed() {
       },
     };
 
+
+
     try {
+
+      console.log(0)
+
       let unprocessedPDAs = await connection.getProgramAccounts(programId, {
         filters: [filter],
       });
+      console.log(1)
+
 
       for (const pda of unprocessedPDAs) {
+        console.log(2)
+
         await new Promise((r) => setTimeout(r, 1000)); // Wait 1 second between each PDA to be updated
 
-        if (processing.has(pda)) continue;
+        console.log(3)
+
+        if (pendingReveals.has(pda)) continue;
+
+        console.log(4)
+
 
         let state = (await getPDAInfo(pda.pubkey)) as any;
         console.log(state);
+
+        console.log(5)
+
 
         const result = generate(
           keypair.secretKey,
@@ -46,7 +61,7 @@ async function fetchNotRevealed() {
         );
         console.log("signature", signature);
 
-        processing.set(pda, new Date().getTime());
+        pendingReveals.set(pda, new Date().getTime());
       }
     } catch (error) {
       console.log("Error Fetching not revealed accounts", error);
@@ -97,12 +112,12 @@ function generate(data1: Uint8Array, data2: Uint8Array, commits: number) {
 function cleanupExpiredAddresses() {
   const currentTime = new Date().getTime();
 
-  for (const [address, lastSentTime] of processing.entries()) {
+  for (const [address, lastSentTime] of pendingReveals.entries()) {
     const timeDifference = currentTime - lastSentTime;
 
     if (timeDifference >= 120000) {
       // 2 minutes after the transaction is sent
-      processing.delete(address);
+      pendingReveals.delete(address);
       console.log("Cleaned", address, "from cache");
     }
   }
