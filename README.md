@@ -7,7 +7,7 @@ to be used in on-chain operations.
 
 ## Setting up your environment
 
-In order to run the pseudorandom number generator server, you will need to [install node and npm](https://docs.npmjs.com/ownloading-and-installing-node-js-and-npm).
+In order to run the pseudorandom number generator server, you will need to [install node and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
 
 You will also need to create a `.env` file in the root of your directory containing the private key of the vrf-program admin wallet,
 an url to a network provider and the address of the vrf-program.
